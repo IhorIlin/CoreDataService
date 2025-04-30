@@ -7,19 +7,34 @@
 
 import CoreData
 
-final class DefaultCoreDataStack: CoreDataStack {
+public final class DefaultCoreDataStack: CoreDataStack {
 
     /// Persistent container
     private let container: NSPersistentContainer
 
     /// view context for updating UI 
-    var viewContext: NSManagedObjectContext {
+    public var viewContext: NSManagedObjectContext {
         container.viewContext
     }
     
     /// Initialization CoreData stack
-    init(configuration: CoreDataConfigurable) {
-        container = NSPersistentContainer(name: configuration.modelName)
+    public init(configuration: CoreDataConfigurable) {
+//        container = NSPersistentContainer(name: configuration.modelName)
+//        guard let modelURL = Bundle.module.url(forResource: configuration.modelName, withExtension: "momd"),
+//              let model = NSManagedObjectModel(contentsOf: modelURL) else {
+//            throw CoreDataError.failedLoadingStore(error: <#T##any Error#>)
+//        }
+//
+//        let container = NSPersistentContainer(name: configuration.modelName, managedObjectModel: model)
+        for url in Bundle(for: DefaultCoreDataStack.self).urls(forResourcesWithExtension: "momd", subdirectory: nil) ?? [] {
+            print("Found MOMD resource:", url)
+        }
+        guard let moduleURL = Bundle(for: DefaultCoreDataStack.self).url(forResource: configuration.modelName, withExtension: "momd"),
+              let model = NSManagedObjectModel(contentsOf: moduleURL) else {
+            fatalError("CORE DATA BUNDLE ISSUE")
+        }
+        
+        container = NSPersistentContainer(name: "TestModel", managedObjectModel: model)
 
         if configuration.inMemory {
             let description = NSPersistentStoreDescription()
@@ -38,7 +53,7 @@ final class DefaultCoreDataStack: CoreDataStack {
     }
 
     /// Background context for performing long heavy tasks
-    func backgroundContext() -> NSManagedObjectContext {
+    public func backgroundContext() -> NSManagedObjectContext {
         let context = container.newBackgroundContext()
         
         context.automaticallyMergesChangesFromParent = true

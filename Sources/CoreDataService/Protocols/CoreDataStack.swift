@@ -8,7 +8,7 @@
 import CoreData
 
 /// Protocol `CoreDataStack` define interface for access main contexts
-protocol CoreDataStack {
+public protocol CoreDataStack {
     
     /// `viewContext` view context for working with UI
     var viewContext: NSManagedObjectContext { get }

@@ -8,7 +8,7 @@
 import Foundation
 
 /// A protocol that defines the configuration required to initialize a Core Data stack.
-protocol CoreDataConfigurable {
+public protocol CoreDataConfigurable {
     
     /// The name of the Core Data model (xcdatamodeld file).
     var modelName: String { get set }

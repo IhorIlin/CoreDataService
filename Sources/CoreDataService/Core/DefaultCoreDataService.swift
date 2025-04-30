@@ -26,7 +26,7 @@ public final class DefaultCoreDataService: CoreDataService {
     
     // MARK: - Init
     
-    init(stack: CoreDataStack) {
+    public init(stack: CoreDataStack) {
         coreDataStack = stack
     }
     
