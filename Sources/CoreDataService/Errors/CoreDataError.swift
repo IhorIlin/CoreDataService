@@ -9,6 +9,7 @@ import Foundation
 
 /// An enumeration representing various Core Data-related errors.
 public enum CoreDataError: Error, LocalizedError {
+    
     /// Thrown when the persistent store fails to load.
     case failedLoadingStore(error: Error)
     

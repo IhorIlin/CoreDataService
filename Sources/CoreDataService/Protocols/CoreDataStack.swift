@@ -9,8 +9,10 @@ import CoreData
 
 /// Protocol `CoreDataStack` define interface for access main contexts
 protocol CoreDataStack {
+    
     /// `viewContext` view context for working with UI
     var viewContext: NSManagedObjectContext { get }
+    
     /// `backgroundContext` function returns new background context for performing long heavy tasks
     func backgroundContext() -> NSManagedObjectContext
 }
