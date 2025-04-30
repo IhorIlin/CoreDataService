@@ -19,22 +19,7 @@ public final class DefaultCoreDataStack: CoreDataStack {
     
     /// Initialization CoreData stack
     public init(configuration: CoreDataConfigurable) {
-//        container = NSPersistentContainer(name: configuration.modelName)
-//        guard let modelURL = Bundle.module.url(forResource: configuration.modelName, withExtension: "momd"),
-//              let model = NSManagedObjectModel(contentsOf: modelURL) else {
-//            throw CoreDataError.failedLoadingStore(error: <#T##any Error#>)
-//        }
-//
-//        let container = NSPersistentContainer(name: configuration.modelName, managedObjectModel: model)
-        for url in Bundle(for: DefaultCoreDataStack.self).urls(forResourcesWithExtension: "momd", subdirectory: nil) ?? [] {
-            print("Found MOMD resource:", url)
-        }
-        guard let moduleURL = Bundle(for: DefaultCoreDataStack.self).url(forResource: configuration.modelName, withExtension: "momd"),
-              let model = NSManagedObjectModel(contentsOf: moduleURL) else {
-            fatalError("CORE DATA BUNDLE ISSUE")
-        }
-        
-        container = NSPersistentContainer(name: "TestModel", managedObjectModel: model)
+        container = NSPersistentContainer(name: configuration.modelName)
 
         if configuration.inMemory {
             let description = NSPersistentStoreDescription()
