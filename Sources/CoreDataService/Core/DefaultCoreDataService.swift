@@ -21,7 +21,7 @@ public final class DefaultCoreDataService: CoreDataService {
     
     /// Background context for background operations.
     private var backgroundContext: NSManagedObjectContext {
-        coreDataStack.backgroundContext()
+        coreDataStack.backgroundContext
     }
     
     // MARK: - Init
