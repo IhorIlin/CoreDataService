@@ -14,5 +14,5 @@ public protocol CoreDataStack {
     var viewContext: NSManagedObjectContext { get }
     
     /// `backgroundContext` function returns new background context for performing long heavy tasks
-    func backgroundContext() -> NSManagedObjectContext
+    var backgroundContext: NSManagedObjectContext { get }
 }

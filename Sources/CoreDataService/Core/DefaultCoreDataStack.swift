@@ -17,6 +17,9 @@ public final class DefaultCoreDataStack: CoreDataStack {
         container.viewContext
     }
     
+    /// Background context for performing long heavy tasks
+    public var backgroundContext: NSManagedObjectContext
+    
     /// Initialization CoreData stack
     public init(configuration: CoreDataConfigurable) {
         container = NSPersistentContainer(name: configuration.modelName)
@@ -35,15 +38,10 @@ public final class DefaultCoreDataStack: CoreDataStack {
         
         container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
-    }
-
-    /// Background context for performing long heavy tasks
-    public func backgroundContext() -> NSManagedObjectContext {
-        let context = container.newBackgroundContext()
         
-        context.automaticallyMergesChangesFromParent = true
-        context.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+        backgroundContext = container.newBackgroundContext()
         
-        return context
+        backgroundContext.automaticallyMergesChangesFromParent = true
+        backgroundContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
     }
 }
