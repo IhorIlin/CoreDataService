@@ -1,3 +1,6 @@
+![Swift](https://img.shields.io/badge/swift-5.9-orange)
+![iOS](https://img.shields.io/badge/iOS-13%2B-blue)
+![License](https://img.shields.io/github/license/IhorIlin/CoreDataService)
 
 # CoreDataService
 
