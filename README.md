@@ -25,7 +25,7 @@ https://github.com/IhorIlin/CoreDataService.git
 Or add manually to `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/IhorIlin/CoreDataService.git", from: "0.1.0")
+.package(url: "https://github.com/IhorIlin/CoreDataService.git", from: "0.2.0")
 ```
 
 ## Usage
@@ -54,10 +54,12 @@ struct User: CoreDataRepresentable {
 ### Initialize the stack
 
 ```swift
-let config = DefaultCoreDataConfiguration(modelName: "MyModel")
+let config = DefaultCoreDataConfiguration(modelName: "MyModel", inMemory: false, bundle: .main)
 let stack = DefaultCoreDataStack(configuration: config)
 let service = DefaultCoreDataService(stack: stack)
 ```
+
+_Note: for unit tests, use `bundle: .module` instead of `.main`._
 
 ### Insert
 
