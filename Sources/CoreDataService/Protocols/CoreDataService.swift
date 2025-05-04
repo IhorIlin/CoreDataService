@@ -58,6 +58,11 @@ public protocol CoreDataService {
     /// - Parameter model: The Swift model to insert into CoreData.
     /// - Throws: An error if the insertion fails.
     func insertModel<Model: CoreDataRepresentable>(_ model: Model) throws
+    
+    /// Insert CoreData entity directly
+    /// - Parameter entity: The CoreData entity to insert into CoreData.
+    /// - Throws: An error if the insertion fails.
+    func insertEntity<Entity: NSManagedObject>(_ entity: Entity) throws
 
     /// Delete Swift model from CoreData
     /// - Parameter model: The Swift model to delete from CoreData.

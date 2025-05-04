@@ -22,7 +22,10 @@ let package = Package(
             name: "CoreDataService"),
         .testTarget(
             name: "CoreDataServiceTests",
-            dependencies: ["CoreDataService"]
+            dependencies: ["CoreDataService"],
+            resources: [
+                .process("Resources/TestModel.momd")
+            ]
         ),
     ]
 )

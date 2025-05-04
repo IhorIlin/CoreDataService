@@ -22,8 +22,15 @@ public final class DefaultCoreDataStack: CoreDataStack {
     
     /// Initialization CoreData stack
     public init(configuration: CoreDataConfigurable) {
-        container = NSPersistentContainer(name: configuration.modelName)
-
+        guard
+            let url = configuration.bundle.url(forResource: configuration.modelName, withExtension: "momd"),
+            let model = NSManagedObjectModel(contentsOf: url) else {
+            
+            fatalError("CoreDataStack failed to load model \(configuration.modelName)")
+        }
+        
+        container = NSPersistentContainer(name: configuration.modelName, managedObjectModel: model)
+        
         if configuration.inMemory {
             let description = NSPersistentStoreDescription()
             description.url = URL(fileURLWithPath: "/dev/null")
