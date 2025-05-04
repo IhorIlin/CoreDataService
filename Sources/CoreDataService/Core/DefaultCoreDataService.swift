@@ -180,6 +180,23 @@ public final class DefaultCoreDataService: CoreDataService {
         }
     }
     
+    public func insertEntity<Entity: NSManagedObject>(_ entity: Entity) throws {
+        var insertError: Error?
+        
+        backgroundContext.performAndWait {
+            backgroundContext.insert(entity)
+            do {
+                try backgroundContext.save()
+            } catch {
+                insertError = error
+            }
+        }
+        
+        if let error = insertError {
+            throw error
+        }
+    }
+    
     // MARK: - Delete
     
     /// Deletes the given model using the background context.
