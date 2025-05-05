@@ -1,7 +1,8 @@
 ![Swift](https://img.shields.io/badge/swift-6.1%2B-orange)
-![iOS](https://img.shields.io/badge/iOS-13%2B-blue)
+![iOS](https://img.shields.io/badge/iOS-17%2B-blue)
 ![License](https://img.shields.io/github/license/IhorIlin/CoreDataService)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FIhorIlin%2FCoreDataService%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/IhorIlin/CoreDataService)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FIhorIlin%2FCoreDataService%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/IhorIlin/CoreDataService)
 
 # CoreDataService
 
