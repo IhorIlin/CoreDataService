@@ -37,22 +37,34 @@ public protocol CoreDataService {
     ///   - modelType: The type of the Swift model to fetch.
     ///   - predicate: An optional predicate to filter the fetch request.
     ///   - sortDescriptors: An optional array of sort descriptors to order the results.
-    ///   - completion: A completion handler called with the result containing either an array of models or a CoreDataError.
+    /// - Throws: CoreDataError if fetching fails.
+    /// - Returns: Array of fetched models.
     func fetchModels<Model: CoreDataRepresentable>(_ modelType: Model.Type,
                                                    predicate: NSPredicate?,
-                                                   sortDescriptors: [NSSortDescriptor]?,
-                                                   completion: @escaping (Result<[Model], CoreDataError>) -> Void) async
+                                                   sortDescriptors: [NSSortDescriptor]?) async throws -> [Model]
 
     /// Fetch CoreData entities asynchronously (advanced usage)
     /// - Parameters:
     ///   - entityType: The type of the CoreData entity to fetch.
     ///   - predicate: An optional predicate to filter the fetch request.
     ///   - sortDescriptors: An optional array of sort descriptors to order the results.
-    ///   - completion: A completion handler called with the result containing either an array of entities or a CoreDataError.
+    /// - Throws: CoreDataError if fetching fails.
+    /// - Returns: Array of fetched entities.
     func fetchEntities<Entity: NSManagedObject>(_ entityType: Entity.Type,
                                                 predicate: NSPredicate?,
-                                                sortDescriptors: [NSSortDescriptor]?,
-                                                completion: @escaping (Result<[Entity], CoreDataError>) -> Void) async
+                                                sortDescriptors: [NSSortDescriptor]?) async throws -> [Entity]
+    
+    /// Asynchronously fetches Swift models using a custom NSFetchRequest.
+    /// - Parameter fetchRequest: A configured NSFetchRequest to use for fetching.
+    /// - Throws: CoreDataError if fetching fails.
+    /// - Returns: An array of fetched models.
+    func fetchModels<Model: CoreDataRepresentable>(_ modelType: Model.Type, with fetchRequest: NSFetchRequest<Model.Entity>) async throws -> [Model]
+    
+    /// Asynchronously fetches CoreData entities using a custom NSFetchRequest.
+    /// - Parameter fetchRequest: A configured NSFetchRequest to use for fetching.
+    /// - Throws: CoreDataError if fetching fails.
+    /// - Returns: An array of fetched entities.
+    func fetchEntities<Entity: NSManagedObject>(with fetchRequest: NSFetchRequest<Entity>) async throws -> [Entity]
     
     /// Create and insert Swift model into CoreData
     /// - Parameter model: The Swift model to insert into CoreData.
