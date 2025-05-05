@@ -6,6 +6,13 @@
 
 A lightweight, testable, thread-safe Core Data stack and CRUD service written in Swift, designed for modular integration as a Swift Package.
 
+## Requirements 
+
+- Swift 6.1+
+- iOS 17+, macOS 14+
+
+⚠️ Support for Swift 5.5+ / iOS 15+ is planned for a future release.
+
 ## Features
 
 ✅ Thread-safe Core Data stack using `NSPersistentContainer`  
@@ -28,7 +35,7 @@ https://github.com/IhorIlin/CoreDataService.git
 Or add manually to `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/IhorIlin/CoreDataService.git", from: "0.2.0")
+.package(url: "https://github.com/IhorIlin/CoreDataService.git", from: "0.3.0")
 ```
 
 ## Usage
@@ -76,6 +83,17 @@ try service.save()
 
 ```swift
 let users = try service.fetchModels(User.self)
+```
+
+_Note: The `fetchModels(_:with:)` method requires an explicit model type to be specified._
+
+### Fetch with custom fetch request
+
+```swift
+let fetchRequest = NSFetchRequest<UserEntity>(entityName: String(describing: UserEntity.self))
+fetchRequest.predicate = NSPredicate(format: "name == %@", "Ihor")
+
+let users = try await service.fetchModels(User.self, with: fetchRequest)
 ```
 
 ### Delete

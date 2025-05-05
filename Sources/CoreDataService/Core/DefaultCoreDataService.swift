@@ -96,9 +96,9 @@ public final class DefaultCoreDataService: CoreDataService {
         
         if let error = fetchError {
             throw error
-        } else {
-            return entities
         }
+        
+        return entities
     }
     
     // MARK: - Async Fetch
@@ -108,12 +108,12 @@ public final class DefaultCoreDataService: CoreDataService {
     ///   - modelType: The type of model conforming to CoreDataRepresentable.
     ///   - predicate: Optional NSPredicate to filter results.
     ///   - sortDescriptors: Optional array of NSSortDescriptor to sort results.
-    ///   - completion: Completion handler with Result containing array of models or CoreDataError.
+    /// - Throws: CoreDataError if fetching fails.
+    /// - Returns: Array of fetched models.
     public func fetchModels<Model: CoreDataRepresentable>(_ modelType: Model.Type,
                                                           predicate: NSPredicate?,
-                                                          sortDescriptors: [NSSortDescriptor]?,
-                                                          completion: @escaping (Result<[Model], CoreDataError>) -> Void) async {
-        await self.viewContext.perform {
+                                                          sortDescriptors: [NSSortDescriptor]?) async throws -> [Model] {
+        try await self.viewContext.perform {
             let fetchRequest = NSFetchRequest<Model.Entity>(entityName: String(describing: Model.Entity.self))
             
             fetchRequest.predicate = predicate
@@ -124,9 +124,9 @@ public final class DefaultCoreDataService: CoreDataService {
                 
                 let models = entities.map { Model(from: $0) }
                 
-                completion(.success(models))
+                return models
             } catch {
-                completion(.failure(CoreDataError.failedFetchingEntities(error: error)))
+                throw CoreDataError.failedFetchingEntities(error: error)
             }
         }
     }
@@ -136,12 +136,12 @@ public final class DefaultCoreDataService: CoreDataService {
     ///   - entityType: The NSManagedObject subclass type.
     ///   - predicate: Optional NSPredicate to filter results.
     ///   - sortDescriptors: Optional array of NSSortDescriptor to sort results.
-    ///   - completion: Completion handler with Result containing array of entities or CoreDataError.
+    /// - Throws: CoreDataError if fetching fails.
+    /// - Returns: Array of fetched entities.
     public func fetchEntities<Entity: NSManagedObject>(_ entityType: Entity.Type,
                                                        predicate: NSPredicate?,
-                                                       sortDescriptors: [NSSortDescriptor]?,
-                                                       completion: @escaping (Result<[Entity], CoreDataError>) -> Void) async {
-        await self.viewContext.perform {
+                                                       sortDescriptors: [NSSortDescriptor]?) async throws -> [Entity] {
+        try await self.viewContext.perform {
             let fetchRequest = NSFetchRequest<Entity>(entityName: String(describing: Entity.self))
             
             fetchRequest.predicate = predicate
@@ -150,9 +150,41 @@ public final class DefaultCoreDataService: CoreDataService {
             do {
                 let entities = try self.viewContext.fetch(fetchRequest)
                 
-                completion(.success(entities))
+                return entities
             } catch {
-                completion(.failure(CoreDataError.failedFetchingEntities(error: error)))
+                throw CoreDataError.failedFetchingEntities(error: error)
+            }
+        }
+    }
+    
+    /// Asynchronously fetches models using a custom NSFetchRequest.
+    /// - Parameter fetchRequest: A configured NSFetchRequest to use for fetching.
+    /// - Throws: CoreDataError if fetching fails.
+    /// - Returns: An array of fetched models.
+    public func fetchModels<Model: CoreDataRepresentable>(_ modelType: Model.Type, with fetchRequest: NSFetchRequest<Model.Entity>) async throws -> [Model] {
+        try await viewContext.perform {
+            do {
+                let entities = try self.viewContext.fetch(fetchRequest)
+                
+                return entities.map { Model(from: $0) }
+            } catch {
+                throw CoreDataError.failedFetchingEntities(error: error)
+            }
+        }
+    }
+    
+    /// Asynchronously fetches entities using a custom NSFetchRequest.
+    /// - Parameter fetchRequest: A configured NSFetchRequest to use for fetching.
+    /// - Throws: CoreDataError if fetching fails.
+    /// - Returns: An array of fetched entities.
+    public func fetchEntities<Entity: NSManagedObject>(with fetchRequest: NSFetchRequest<Entity>) async throws -> [Entity] {
+        try await viewContext.perform {
+            do {
+                let entities = try self.viewContext.fetch(fetchRequest)
+                
+                return entities
+            } catch {
+                throw CoreDataError.failedFetchingEntities(error: error)
             }
         }
     }

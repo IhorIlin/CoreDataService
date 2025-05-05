@@ -40,9 +40,7 @@ final class CoreDataServiceTests: XCTestCase {
     }
     
     func testFetchModel() {
-        XCTAssertNoThrow(try service.insertModel(User(name: "John")))
-        XCTAssertNoThrow(try service.insertModel(User(name: "Bill")))
-        XCTAssertNoThrow(try service.insertModel(User(name: "Fenix")))
+        insertTestUsers()
         
         let models = try? service.fetchModels(User.self, predicate: nil, sortDescriptors: nil)
         
@@ -54,26 +52,33 @@ final class CoreDataServiceTests: XCTestCase {
     }
     
     func testFetchEntity() {
-        let entity1 = UserEntity(context: stack.backgroundContext)
-        
-        entity1.id = UUID()
-        entity1.name = "Ihor"
-        
-        let entity2 = UserEntity(context: stack.backgroundContext)
-        
-        entity2.id = UUID()
-        entity2.name = "Bill"
-        
-        let entity3 = UserEntity(context: stack.backgroundContext)
-        
-        entity3.id = UUID()
-        entity3.name = "John"
-        
-        XCTAssertNoThrow(try service.insertEntity(entity1))
-        XCTAssertNoThrow(try service.insertEntity(entity2))
-        XCTAssertNoThrow(try service.insertEntity(entity3))
+        insertTestEntities()
         
         let models = try? service.fetchEntities(UserEntity.self, predicate: nil, sortDescriptors: nil)
+        
+        XCTAssertNotNil(models)
+        
+        XCTAssertFalse(models?.isEmpty ?? true)
+        
+        XCTAssertEqual(models?.count, 3)
+    }
+    
+    func testFetchModelsAsync() async {
+        insertTestUsers()
+        
+        let models = try? await service.fetchModels(User.self, predicate: nil, sortDescriptors: nil)
+        
+        XCTAssertNotNil(models)
+        
+        XCTAssertFalse(models?.isEmpty ?? true)
+        
+        XCTAssertEqual(models?.count, 3)
+    }
+    
+    func testFetchEntitiesAsync() async {
+        insertTestEntities()
+        
+        let models = try? await service.fetchEntities(UserEntity.self, predicate: nil, sortDescriptors: nil)
         
         XCTAssertNotNil(models)
         
@@ -147,5 +152,64 @@ final class CoreDataServiceTests: XCTestCase {
         XCTAssertEqual(updatedModels?.count, 2)
         
         XCTAssertFalse(updatedModels?.contains { $0.id == entity3.id } ?? true)
+    }
+    
+    func testFetchModelsWithFetchRequest() async {
+        insertTestUsers()
+        
+        let fetchRequest = NSFetchRequest<User.Entity>(entityName: String(describing: User.Entity.self))
+        
+        let models = try? await service.fetchModels(User.self, with: fetchRequest)
+        
+        XCTAssertNotNil(models)
+        
+        XCTAssertFalse(models?.isEmpty ?? true)
+        
+        XCTAssertEqual(models?.count, 3)
+    }
+    
+    func testFetchEntitiesWithFetchRequest() async {
+        insertTestEntities()
+        
+        let fetchRequest = NSFetchRequest<UserEntity>(entityName: String(describing: UserEntity.self))
+        
+        let models = try? await service.fetchEntities(with: fetchRequest)
+        
+        XCTAssertNotNil(models)
+        
+        XCTAssertFalse(models?.isEmpty ?? true)
+        
+        XCTAssertEqual(models?.count, 3)
+    }
+    
+    func insertTestUsers() {
+        let model1 = User(name: "John")
+        let model2 = User(name: "Bill")
+        let model3 = User(name: "Fenix")
+        
+        XCTAssertNoThrow(try service.insertModel(model1))
+        XCTAssertNoThrow(try service.insertModel(model2))
+        XCTAssertNoThrow(try service.insertModel(model3))
+    }
+    
+    func insertTestEntities() {
+        let entity1 = UserEntity(context: stack.backgroundContext)
+        
+        entity1.id = UUID()
+        entity1.name = "Ihor"
+        
+        let entity2 = UserEntity(context: stack.backgroundContext)
+        
+        entity2.id = UUID()
+        entity2.name = "Bill"
+        
+        let entity3 = UserEntity(context: stack.backgroundContext)
+        
+        entity3.id = UUID()
+        entity3.name = "John"
+        
+        XCTAssertNoThrow(try service.insertEntity(entity1))
+        XCTAssertNoThrow(try service.insertEntity(entity2))
+        XCTAssertNoThrow(try service.insertEntity(entity3))
     }
 }
