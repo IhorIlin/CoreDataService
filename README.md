@@ -1,3 +1,7 @@
+![Swift](https://img.shields.io/badge/swift-5.9-orange)
+![iOS](https://img.shields.io/badge/iOS-13%2B-blue)
+![License](https://img.shields.io/github/license/IhorIlin/CoreDataService)
+
 # CoreDataService
 
 A lightweight, testable, thread-safe Core Data stack and CRUD service written in Swift, designed for modular integration as a Swift Package.
